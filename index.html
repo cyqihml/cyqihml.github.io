@@ -1,9 +1,108 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>新闻</title>
-</head>
-<body>
-<script language="JavaScript" src="http://news.17173.com/js/news1.js"></script>
-</body>
+   <head>
+      <title>购物清单</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link href="css/bootstrap.min.css" rel="stylesheet">
+      <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+      <script src="https://code.jquery.com/jquery.js"></script>
+       
+      <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+      <script src="js/bootstrap.min.js"></script>
+      <script src="https://cdn.bootcss.com/vue/2.4.2/vue.min.js"></script>
+      <style type="text/css">
+         .goods-list{ margin-top: 100px; }
+         .goods-list .right-count{margin-top: 37px;margin-left: 20px;}
+         .goods-list .right-count b{padding-right: 5px;vertical-align: text-top;}
+      </style>
+   </head>
+   <body>
+      <div class="container-fluid goods-list">
+         <div class="row">
+            <!--head begin-->
+            <div class="col-md-12">
+               <h1 class="pull-left">{{name}}的购物清单列表</h1>
+               <div class="pull-left right-count">
+                  <b>清单总数</b><span class="label label-warning">{{item.length}}</span>
+                  <b>未采购数</b><span class="label label-success">{{count}}</span>
+               </div>  
+            </div>
+            <!--head begin-->
+            <div class="clearfix"></div>
+            <!--添加input begin-->
+             <div class="col-md-10">
+               <input type="email" class="form-control" id="inputEmail3" placeholder="添加产品" v-model="text">
+             </div>
+             <div class="col-md-2">
+               <button type="submit" class="btn btn-default" v-on:click="addGoods(text)">添加</button>
+             </div>
+            <!--添加input end-->
+            <div class="clearfix"></div>
+            <!--列表begin-->
+            <div class="col-md-12">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>清单名称</th>
+                      <th>已采购</th>
+                      <th>操作</th>
+                      <th>状态</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(v,index) in item">
+                      <td>{{v.action}}</td>
+                      <td><input type="checkbox" name="" v-model="v.status" v-on:change="changelist"></td>
+                      <td><button class="btn" type="button" v-on:click="delList(index)">删除</button></td>
+                      <td v-if="v.status == true">已经选中</td>
+                      <td v-else>未选中</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+               <!--列表end-->
+         </div>
+      </div>
+      
+      <script type="text/javascript">
+         new Vue({
+            el:".goods-list",
+            data:{
+               name:"Eason",
+               item:[
+                     {"action":"男装外套",status:false},
+                     {"action":"保暖衣",status:false},
+                     {"action":"牛仔裤",status:false},
+                     {"action":"运动装",status:false},
+                  ],
+               count:0,
+               text:""
+            },
+            methods:{
+               addGoods:function(text){
+                  if(text == "") return;
+                  this.item.push({action:text,status:false});
+                  this.text = "";
+                  this.changelist();
+               },
+               changelist:function(){
+                  var _this = this;
+                  _this.count = 0;
+                  this.item.forEach(function(element,index){
+                     if(!element.status){
+                        _this.count++;
+                     }
+                  })
+               },
+               delList:function(index){
+                  if(!this.item[index].status)
+                  this.item.splice(index,1);
+               }
+            }
+         })
+
+
+         
+      </script>
+   </body>
 </html>
